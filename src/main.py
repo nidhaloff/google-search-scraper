@@ -5,28 +5,54 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
-def search(text: str):
-    op = webdriver.ChromeOptions()
-    op.add_argument('headless')
-    driver = webdriver.Chrome('/usr/bin/chromedriver', options=op)
-    url = configs["GOOGLE_URL"]
-    driver.get(url)
-    # driver.implicitly_wait(15)
-    # accept_permissions_form = driver.find_element_by_id('introAgreeButton')
-    # print("found: ", accept_permissions_form.get_attribute('rule'))
-    # driver.implicitly_wait(15)
-    # accept_permissions_form.click()
+class GoogleScraper(object):
+    def __init__(self, chrome_driver_path: str = '/usr/bin/chromedriver'):
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        self.url = configs["GOOGLE_URL"]
+        self.driver = webdriver.Chrome(chrome_driver_path, options=None)  # options
 
-    search_box = driver.find_element_by_name('q')
-    search_box.send_keys(text)
-    search_box.send_keys(Keys.RETURN)
+    def map_tabs_to_names(self, tabs: list):
+        d = {}
+        for tab in tabs:
+            if tab.find('nws') > -1:
+                d['news'] = tab
+            elif tab.find('isch') > -1:
+                d['images'] = tab
+            elif tab.find('vid') > -1:
+                d['videos'] = tab
+        return d
 
-    links = driver.find_elements_by_css_selector('div.yuRUbf > a')
-    for l in links:
-        print(l.get_attribute('href'))
-    return driver
-    # driver.close()
+    def search(self, text: str, advanced_search=False):
+        results = {}
+        self.driver.get(self.url)
+        search_box = self.driver.find_element_by_name('q')
+        search_box.send_keys(text)
+        search_box.send_keys(Keys.RETURN)
+        tabs = self.get_tabs()
+        d = self.map_tabs_to_names(tabs)
+
+        links = self.driver.find_elements_by_css_selector('div.yuRUbf > a')
+        results['links'] = [link.get_attribute('href') for link in links]
+        if not advanced_search:
+            return results
+
+        # search further images and videos results:
+        for k, v in d.items():
+            self.driver.get(v)
+            links = self.driver.find_elements_by_css_selector('div.yuRUbf > a')
+            results[k] = [link.get_attribute('href') for link in links]
+
+        return self.driver, results
+        # driver.close()
+
+    def get_tabs(self):
+        tabs = self.driver.find_elements_by_css_selector('a.hide-focus-ring')
+        return [tab.get_attribute('href') for tab in tabs if tab.get_attribute('href')]
 
 
 if __name__ == '__main__':
-    d = search("nidhal baccouri")
+    _, res = GoogleScraper().search("donald trump", advanced_search=True)
+    for k, v in res.items():
+        print(f"{k} results: "
+              f"{v}")
