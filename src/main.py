@@ -9,7 +9,7 @@ from selenium.webdriver.common.keys import Keys
 def search(text: str):
     op = webdriver.ChromeOptions()
     op.add_argument('headless')
-    driver = webdriver.Chrome('/usr/bin/chromedriver', options=None)
+    driver = webdriver.Chrome('/usr/bin/chromedriver', options=op)
     url = configs["GOOGLE_URL"]
     driver.get(url)
     # driver.implicitly_wait(15)
