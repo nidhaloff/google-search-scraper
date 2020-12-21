@@ -34,7 +34,7 @@ setup(
     description="a python package to scrape google search results",
     entry_points={
         'console_scripts': [
-            'google_search_scraper=google_search_scraper.cli:main',
+            'google_search_scraper=src.cli:main',
         ],
     },
     install_requires=requirements,
@@ -43,7 +43,7 @@ setup(
     include_package_data=True,
     keywords='google_search_scraper',
     name='google_search_scraper',
-    packages=find_packages(include=['google_search_scraper', 'google_search_scraper.*']),
+    packages=find_packages(include=['src', 'src.*']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
