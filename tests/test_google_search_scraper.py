@@ -5,7 +5,7 @@
 import pytest
 
 
-from src import google_search_scraper
+from src.main import GoogleScraper
 
 
 @pytest.fixture
