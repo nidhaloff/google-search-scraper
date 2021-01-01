@@ -32,7 +32,7 @@ Usage
 
 .. code-block:: python
 
-    from google-search-scraper import GoogleScraper
+    from google_search_scraper import GoogleScraper
 
     your_text = 'something interesting'
     results = GoogleScraper().search(your_text)

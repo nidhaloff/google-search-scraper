@@ -3,3 +3,4 @@
 """Tests for `google_search_scraper` package."""
 
 import pytest
+
