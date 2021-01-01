@@ -14,11 +14,6 @@ google-search-scraper
         :alt: Documentation Status
 
 
-.. image:: https://pyup.io/repos/github/nidhaloff/google-search-scraper/shield.svg
-     :target: https://pyup.io/repos/github/nidhaloff/google-search-scraper/
-     :alt: Updates
-
-
 
 a python package to scrape google search results
 
