@@ -10,7 +10,7 @@ google-search-scraper
         :target: https://travis-ci.com/nidhaloff/google-search-scraper
 
 .. image:: https://readthedocs.org/projects/google-search-scraper/badge/?version=latest
-        :target: https://google-search-scraper.readthedocs.io/en/latest/?badge=latest
+        :target: https://google-search-scraper.readthedocs.io/en/main
         :alt: Documentation Status
 
 
