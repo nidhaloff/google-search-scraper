@@ -23,7 +23,7 @@ class GoogleScraper(object):
                 d['videos'] = tab
         return d
 
-    def search(self, text: str, advanced_search=False):
+    def search(self, text: str, detailed=False):
         results = {}
         self.driver.get(self.url)
         search_box = self.driver.find_element_by_name('q')
@@ -34,17 +34,23 @@ class GoogleScraper(object):
 
         links = self.driver.find_elements_by_css_selector('div.yuRUbf > a')
         results['links'] = [link.get_attribute('href') for link in links]
-        if not advanced_search:
-            return results
+        return results if not detailed else self.advanced_search(tabs_map=d, results=results)
 
-        # search further images and videos results:
-        for k, v in d.items():
-            self.driver.get(v)
-            links = self.driver.find_elements_by_css_selector('div.yuRUbf > a')
-            results[k] = [link.get_attribute('href') for link in links]
+    def advanced_search(self, tabs_map: dict, results: dict):
+        for key, val in tabs_map.items():
+            self.driver.get(val)
+            if key == 'news':
+                links = self.driver.find_elements_by_css_selector('div.dbsr > a')
+                results[key] = [link.get_attribute('href') for link in links]
+            elif key == 'images':
+                # # div.bRMDJf.islir > img
+                links = self.driver.find_elements_by_css_selector('a.wXeWr.islib.nfEiy.mM5pbd')
+                results[key] = [link.get_attribute('href') for link in links]
+            else:
+                links = self.driver.find_elements_by_css_selector('div.yuRUbf > a')
+                results[key] = [link.get_attribute('href') for link in links]
 
-        return self.driver, results
-        # driver.close()
+        return results
 
     def get_tabs(self):
         tabs = self.driver.find_elements_by_css_selector('a.hide-focus-ring')
@@ -52,7 +58,7 @@ class GoogleScraper(object):
 
 
 if __name__ == '__main__':
-    _, res = GoogleScraper().search("donald trump", advanced_search=True)
+    _, res = GoogleScraper().search("donald trump", detailed=True)
     for k, v in res.items():
         print(f"{k} results: "
               f"{v}")

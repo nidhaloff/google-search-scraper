@@ -27,9 +27,14 @@ a python package to scrape google search results
 * Documentation: https://google-search-scraper.readthedocs.io.
 
 
-Features
---------
+Usage
+------
 
-* Scrape search results from google
+.. code-block:: python
+
+    from google-search-scraper import GoogleScraper
+
+    your_text = 'something interesting'
+    results = GoogleScraper().search(your_text)
 
 
